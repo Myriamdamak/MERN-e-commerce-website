@@ -10,7 +10,13 @@ import {
 
     USER_DETAIL_REQ,
     USER_DETAIL_REQ_SUCCESS,
-    USER_DETAIL_REQ_FAIL
+    USER_DETAIL_REQ_FAIL,
+
+    USER_LIST_REQ_FAIL,
+    USER_LIST_REQ_SUCCESS,
+    USER_LIST_REQ,
+
+
 } from "../Constants/User.js"
 
 
@@ -86,3 +92,26 @@ const initialState = {
         return state;
     }
   };
+
+  const initialStates = {
+    users: [], // Make sure the users field is initialized as an empty array
+    loading: false,
+    error: null,
+  };
+
+  export const userListReducer = (state =  initialStates, action) => {
+      switch (action.type) {
+        case USER_LIST_REQ:
+          return { loading: true, users: [] };
+    
+        case USER_LIST_REQ_SUCCESS:
+          console.log('users:', action.payload); 
+          return { loading: false, users: action.payload };
+    
+        case USER_LIST_REQ_FAIL:
+          return { loading: false, error: action.payload };
+    
+        default:
+          return state;
+      }
+    };

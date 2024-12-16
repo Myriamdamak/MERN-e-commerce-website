@@ -14,6 +14,15 @@ import {
     USER_DETAIL_REQ_FAIL,
     USER_DETAIL_REQ_SUCCESS,
 
+    USER_LIST_REQ_FAIL,
+    USER_LIST_REQ_SUCCESS,
+    USER_LIST_REQ,
+
+    USER_DELETE_REQ,
+    USER_DELETE_REQ_FAIL,
+    USER_DELETE_REQ_SUCCESS,
+
+
 } from "../Constants/User.js"
 import { BASE_URL } from "../Constants/BASE_URL.js";
 
@@ -31,7 +40,9 @@ export const userLoginAction = (email, password) => async (dispatch)=>{
         const { data } = await axios.post(`${BASE_URL}/api/login`, { email, password }, config);
 
         dispatch({ type: USER_LOGIN_REQ_SUCCESS, payload: data });
-        localStorage.setItem("userInfo", JSON.stringify(data))
+        localStorage.setItem("userInfo", JSON.stringify(data));
+        localStorage.setItem("token", data.token);
+
 
 
     } catch (error) {
@@ -91,3 +102,42 @@ export const userAction = (id) => async (dispatch) => {
     }
 
 }
+
+//list all users
+export const userListAction = () => async (dispatch) => {
+    try {
+        dispatch({ type: USER_LIST_REQ });
+        const { data } = await axios.get(`${BASE_URL}/api/users`);
+        dispatch({ type: USER_LIST_REQ_SUCCESS, payload: data.users }); // Adjust to data.products if needed
+    } catch (error) {
+      console.error('Error fetching products:', error); // Log error
+      dispatch({
+        type: USER_LIST_REQ_FAIL,
+        payload: error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+      });
+    }
+  };
+
+
+  //delete a user
+  export const userDeleteAction = (id) => async (dispatch) => {
+  try {
+    dispatch({ type: USER_DELETE_REQ });
+
+    // Making the API call to delete the user
+    await axios.delete(`${BASE_URL}/api/users/${id}`);
+
+    // Dispatch success action with the user ID to remove it from the state
+    dispatch({
+      type: USER_DELETE_REQ_SUCCESS,
+      payload: id, // Passing the user ID for the reducer to know which user to remove
+    });
+  } catch (error) {
+    dispatch({
+      type: USER_DELETE_REQ_FAIL,
+      payload: error.message, // Handle the error message to be shown in the UI
+    });
+  }
+};

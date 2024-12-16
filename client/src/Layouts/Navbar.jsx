@@ -2,11 +2,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { UserDropdown } from "../components/Dropdown";
 import { Link } from "react-router-dom";
 import { userLogoutAction } from "../Redux/Actions/User";
-
+import { UserRole } from "../Utilities/UserRole";
 import Checkout from "../pages/Checkout";
 import { useState } from "react";
 
 const Navbar = () => {
+  const role = UserRole();
   const userLoginReducer = useSelector((state) => state.userLoginReducer);
   const { userInfo } = userLoginReducer;
   const dispatch = useDispatch();
@@ -31,7 +32,7 @@ const Navbar = () => {
               alt="Flowbite Logo"
             />
             <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
-              Node Shop.
+              Sports Shop.
             </span>
           </Link>
 
@@ -133,13 +134,13 @@ const Navbar = () => {
                 </Link>
               </li>
               <li>
-                <a
-                  href="#"
-                  className="block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500"
-                  aria-current="page"
-                >
-                  About
-                </a>
+              <Link
+            to={role === "admin" ? "/admindash" : "/about"} 
+            className="block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500"
+            aria-current="page"
+          >
+            {role === "admin" ? "Dashboard" : "About"} 
+          </Link>
               </li>
             </ul>
           </div>

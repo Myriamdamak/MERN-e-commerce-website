@@ -14,8 +14,8 @@ import { useSelector } from "react-redux";
 import PlaceOrder from "./pages/PlaceOrder";
 import OrderConfirmation from "./pages/OrderConfirm";
 import { OrderHistory } from "./pages/OrderHistory";
-//import AdminDashboard from "./pages/AdminDashboard";
-//import PrivateRoute from "./Utilities/PrivateRoute";
+import AdminDashboard from "./pages/AdminDashboard";
+import PrivateRoute from "./Utilities/PrivateRoute";
 
 function App() {
 
@@ -26,8 +26,9 @@ function App() {
       <Router>
         <Routes>
           <Route exact path="/" element={<Home />}></Route>
-          <Route exact path="/products/:id" /*element={<PrivateRoute allowedRoles={["user"]}><ProductDetail /></PrivateRoute>}*/
-          element={<ProductDetail />}></Route>
+          <Route exact path="/admindash" element={<PrivateRoute allowedRoles={["admin"]}><AdminDashboard /></PrivateRoute>}></Route>
+          <Route exact path="/products/:id" element={<PrivateRoute allowedRoles={["user"]}><ProductDetail /></PrivateRoute>}>
+           </Route>
           <Route
             exact
             path="/login"
@@ -41,15 +42,15 @@ function App() {
             <Route 
             path="/order/:id" 
             element={
-              /*<PrivateRoute allowedRoles={['user']}>
+              <PrivateRoute allowedRoles={['user']}>
             <OrderConfirmation /> 
-            </PrivateRoute>*/
-            <OrderConfirmation /> 
+            </PrivateRoute>
+          
         } />
-          <Route path="/order-history" element={/*<PrivateRoute allowedRoles={['user']}><OrderHistory /></PrivateRoute>*/<OrderHistory /> } />
+          <Route path="/order-history" element={<PrivateRoute allowedRoles={['user']}><OrderHistory /></PrivateRoute> } />
 
-          <Route exact path="/checkout" element={/*<PrivateRoute allowedRoles={['user']}><Checkout /></PrivateRoute>*/<Checkout />}></Route>
-          <Route exact path="/placeorder" element={/*<PrivateRoute allowedRoles={['user']}><PlaceOrder /></PrivateRoute>*/<PlaceOrder />}> </Route>
+          <Route exact path="/checkout" element={<PrivateRoute allowedRoles={['user']}><Checkout /></PrivateRoute>}></Route>
+          <Route exact path="/placeorder" element={<PrivateRoute allowedRoles={['user']}><PlaceOrder /></PrivateRoute>}> </Route>
         </Routes>
       </Router>
     </>
