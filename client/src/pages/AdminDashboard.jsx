@@ -5,7 +5,7 @@ export default function AdminDashboard(){
     return(
         <>
     <ProductTable/>
-<Users/>
+    <Users/>
 </>
     );
 }

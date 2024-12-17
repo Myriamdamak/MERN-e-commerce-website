@@ -16,6 +16,10 @@ import {
     USER_LIST_REQ_SUCCESS,
     USER_LIST_REQ,
 
+   USER_DELETE_REQ_SUCCESS,
+   USER_DELETE_REQ_FAIL
+
+
 
 } from "../Constants/User.js"
 
@@ -59,10 +63,10 @@ export const userRegisterReducer = (state = {}, action) => {
 
   
 const initialState = {
-    userName: '',        // Default empty userName
-    userId: '',          // Default empty userId
-    loading: false,      // Loading state
-    error: null,         // Error state
+    userName: '',       
+    userId: '',          
+    loading: false,     
+    error: null,        
   };
   
   export const userReducer = (state = initialState, action) => {
@@ -93,25 +97,24 @@ const initialState = {
     }
   };
 
-  const initialStates = {
-    users: [], // Make sure the users field is initialized as an empty array
-    loading: false,
-    error: null,
+//user list with deletion
+  export const userListReducer = (state = {users: []}, action) => {
+    switch (action.type) {
+      case USER_LIST_REQ:
+        return { ...state, loading: true };
+      case USER_LIST_REQ_SUCCESS:
+        return { ...state, loading: false, users: action.payload };
+      case USER_LIST_REQ_FAIL:
+        return { ...state, loading: false, error: action.payload };
+      case USER_DELETE_REQ_SUCCESS:
+        return {
+          ...state,
+          users: (state.users || []).filter(user => user._id !== action.payload),
+        };
+      case USER_DELETE_REQ_FAIL:
+        return { ...state, error: action.payload };
+      default:
+        return state;
+    }
   };
-
-  export const userListReducer = (state =  initialStates, action) => {
-      switch (action.type) {
-        case USER_LIST_REQ:
-          return { loading: true, users: [] };
-    
-        case USER_LIST_REQ_SUCCESS:
-          console.log('users:', action.payload); 
-          return { loading: false, users: action.payload };
-    
-        case USER_LIST_REQ_FAIL:
-          return { loading: false, error: action.payload };
-    
-        default:
-          return state;
-      }
-    };
+  

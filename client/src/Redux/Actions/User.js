@@ -103,41 +103,77 @@ export const userAction = (id) => async (dispatch) => {
 
 }
 
-//list all users
+
 export const userListAction = () => async (dispatch) => {
-    try {
-        dispatch({ type: USER_LIST_REQ });
-        const { data } = await axios.get(`${BASE_URL}/api/users`);
-        dispatch({ type: USER_LIST_REQ_SUCCESS, payload: data.users }); // Adjust to data.products if needed
-    } catch (error) {
-      console.error('Error fetching products:', error); // Log error
-      dispatch({
-        type: USER_LIST_REQ_FAIL,
-        payload: error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-      });
-    }
-  };
-
-
-  //delete a user
-  export const userDeleteAction = (id) => async (dispatch) => {
+  
   try {
-    dispatch({ type: USER_DELETE_REQ });
-
-    // Making the API call to delete the user
-    await axios.delete(`${BASE_URL}/api/users/${id}`);
-
-    // Dispatch success action with the user ID to remove it from the state
-    dispatch({
-      type: USER_DELETE_REQ_SUCCESS,
-      payload: id, // Passing the user ID for the reducer to know which user to remove
-    });
+      dispatch({ type: USER_LIST_REQ });
+      const response = await axios.get(`${BASE_URL}/api/users`);
+      console.log(response); // This will show the entire response
+      const { data } = response;
+    
+      dispatch({ type: USER_LIST_REQ_SUCCESS, payload: data.users });
   } catch (error) {
+    console.error('Error fetching users:', error); // Log error
     dispatch({
-      type: USER_DELETE_REQ_FAIL,
-      payload: error.message, // Handle the error message to be shown in the UI
+      type: USER_LIST_REQ_FAIL,
+      payload: error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message,
     });
   }
 };
+
+
+  //delete a user
+  export const userDeleteAction = (id) => async (dispatch, getState) => {
+  
+    try {
+      dispatch({ type: USER_DELETE_REQ });
+  
+      // Retrieve the user's token from the Redux state
+      const userInfo = getState().userLoginReducer.userInfo;
+  
+      // Set up the config object with the Authorization header
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userInfo.token}`, // Ensure the token is included
+        },
+      };
+      console.log(userInfo.token);
+      
+  
+      // Make the API call to delete the user
+      const { data } = await axios.delete(
+        `${BASE_URL}/api/users/${id}`,
+        config
+      );
+      console.log("api",data);
+      
+  
+     
+      dispatch({
+        type: USER_DELETE_REQ_SUCCESS,
+        payload: id, 
+      });
+    } catch (error) {
+      const message =
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message;
+  
+      
+  
+      // Dispatch failure action with the error message
+      dispatch({
+        type: USER_DELETE_REQ_FAIL,
+        payload: message,
+      });
+    }
+  };
+  
+  
+  
+  
+  
