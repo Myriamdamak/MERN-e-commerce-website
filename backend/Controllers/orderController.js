@@ -47,6 +47,7 @@ const postOrder = async (req, res) => {
       paymentMethod,
       shippingPrice,
       totalPrice,
+      isPaid,
     } = req.body;
 
     // Check if required fields are present
@@ -74,6 +75,7 @@ const postOrder = async (req, res) => {
       paymentMethod,
       shippingPrice,
       totalPrice,
+      isPaid,
       user: req.user.id,
     });
 

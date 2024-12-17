@@ -11,6 +11,7 @@ import { saveShippingAddressAction } from "../Redux/Actions/Cart";
 import { ORDER_RESET } from "../Redux/Constants/Order";
 import { useNavigate } from "react-router-dom";
 
+
 export default function PlaceOrder() {
   const cart = useSelector((state) => state.cartReducer);
   const { cartItems, shippingAddress } = cart;
@@ -82,6 +83,7 @@ const [country, setCountry] = useState(shippingAddress?.country || '');
           paymentMethod: "paypal",
           price: subtotal,
           shippingPrice: shippingPrice,
+          isPaid:true,
         })
       );
     } catch (err) {
@@ -246,9 +248,11 @@ const [country, setCountry] = useState(shippingAddress?.country || '');
                       }}
                     />
                   </PayPalScriptProvider>
+                 
                 )}
               </div>
             </div>
+            
           </div>
         </section>
       </Layout>

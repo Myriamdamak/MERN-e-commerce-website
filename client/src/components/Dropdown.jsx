@@ -9,9 +9,11 @@ export function UserDropdown({ logoutHandler }) {
   
   return (
     <Dropdown label={role} dismissOnClick={false}>
+      {role === "user" && (
       <Link to="/order-history">
         <Dropdown.Item>Order History</Dropdown.Item>
       </Link>
+    )}
       <Dropdown.Item onClick={logoutHandler}>Sign out</Dropdown.Item>
     </Dropdown>
   );

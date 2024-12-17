@@ -52,7 +52,6 @@ export const orderAction = (order) => async (dispatch, getState) => {
 }
 
 //order payment
-
 export const orderPaymentAction =
     (orderId, paymentResult) => async (dispatch, getState) => {
         try {

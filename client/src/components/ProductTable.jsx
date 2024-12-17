@@ -1,15 +1,36 @@
-import  { useEffect } from "react";
+import  { useEffect,useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { productListAction } from "../Redux/Actions/Product";
+import { productListAction,productDeleteAction } from "../Redux/Actions/Product";
 
 export default function ProductTable() {
+   
+
+    const handleDelete = (id) => {
+      if (window.confirm("Are you sure you want to delete this product?",id)) {
+        dispatch(productDeleteAction(id));
+      }
+    };
+
+         const [searchQuery, setSearchQuery] = useState("");
+   
         const dispatch = useDispatch();
         const {  products = [] } = useSelector((state) => state.productListReducer);
       
         useEffect(() => {
           dispatch(productListAction());
         }, [dispatch]);
+
+        const filteredProducts = products.filter((product) => {
+            const searchLower = searchQuery.toLowerCase();
+              return (
+                (product.name && product.name.toLowerCase().includes(searchLower)) ||
+                (product.countInStock && product.countInStock.toLowerCase().includes(searchLower)) ||
+                (product.price && product.price.toLowerCase().includes(searchLower))
+              );
+            });
     return (
+
+        
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
             <div className="pb-4 bg-white dark:bg-gray-900">
                 <label htmlFor="table-search" className="sr-only">
@@ -37,8 +58,10 @@ export default function ProductTable() {
                         type="text"
                         id="table-search"
                         className="block pt-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="Search for items"
-                    />
+                        placeholder="Search for products"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)} 
+          />
                 </div>
             </div>
            
@@ -62,7 +85,7 @@ export default function ProductTable() {
             
                     </thead>
                     <tbody>
-                        {products.map((product) => (
+                        {filteredProducts.map((product) => (
                             <tr
                                 key={product._id}
                                 className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
@@ -76,12 +99,7 @@ export default function ProductTable() {
                                 <td className="px-6 py-4">{product.countInStock}</td>
                                 <td className="px-6 py-4">${product.price}</td>
                                 <td className="px-6 py-4">
-                                  { /* <a
-                                        href={`/product/${product._id}`}
-                                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                                    >
-                                        Edit
-                                    </a>*/}
+                                <button onClick={() => handleDelete(product._id)}>Delete</button>
                                 </td>
                             </tr>
                         ))}
