@@ -15,7 +15,7 @@ export default function ProductTable() {
    
         const dispatch = useDispatch();
         const {  products = [] } = useSelector((state) => state.productListReducer);
-      
+      console.log(products)
         useEffect(() => {
           dispatch(productListAction());
         }, [dispatch]);
@@ -23,9 +23,8 @@ export default function ProductTable() {
         const filteredProducts = products.filter((product) => {
             const searchLower = searchQuery.toLowerCase();
               return (
-                (product.name && product.name.toLowerCase().includes(searchLower)) ||
-                (product.countInStock && product.countInStock.toLowerCase().includes(searchLower)) ||
-                (product.price && product.price.toLowerCase().includes(searchLower))
+                (product.name && product.name.toLowerCase().includes(searchLower)) 
+              
               );
             });
     return (
