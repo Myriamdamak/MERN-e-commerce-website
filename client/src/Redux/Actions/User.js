@@ -22,6 +22,8 @@ import {
     USER_DELETE_REQ_FAIL,
     USER_DELETE_REQ_SUCCESS,
 
+    USER_UPDATE_ROLE_FAIL,
+    USER_UPDATE_ROLE_SUCCESS,
 
 } from "../Constants/User.js"
 import { BASE_URL } from "../Constants/BASE_URL.js";
@@ -173,7 +175,32 @@ export const userListAction = () => async (dispatch) => {
     }
   };
   
+  export const userUpdateRoleAction = (userId, updatedUser) => async (dispatch, getState) => {
+    try {
+      // Extract token from state
+      const userInfo = getState().userLoginReducer.userInfo;
   
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userInfo.token}`, 
+        },
+      };
+  
+      // API call to update user role
+      const { data } = await axios.put(`${BASE_URL}/api/users/${userId}`, updatedUser , config);
+      console.log("hihih")
+      dispatch({
+        type: USER_UPDATE_ROLE_SUCCESS,
+        payload:  data,
+      });
+    } catch (error) {
+      dispatch({
+        type: USER_UPDATE_ROLE_FAIL,
+        payload: error.response?.data?.message || error.message,
+      });
+    }
+  };
   
   
   
