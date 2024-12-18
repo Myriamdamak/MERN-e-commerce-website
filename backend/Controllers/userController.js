@@ -64,11 +64,15 @@ const putUser = async (req, res) => {
       const hashedPassword = await bcrypt.hash(user.password, 10);
       user.password = hashedPassword;  
     }
+    if (user.role && user.role !== foundUser.role) {
+      // You could include additional checks here to validate the role if needed
+      foundUser.role = user.role;  // Update the role
+    }
     await User.findByIdAndUpdate(id, user, { new: true });
     res.status(200).json({ msg: "User updated successfully" });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ msg: "Error on updating user" });
+    res.status(500).json({ msg: "Error on updating user",error: error.message } );
   }
 };
 

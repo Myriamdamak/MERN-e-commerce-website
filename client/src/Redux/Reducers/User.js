@@ -17,8 +17,10 @@ import {
     USER_LIST_REQ,
 
    USER_DELETE_REQ_SUCCESS,
-   USER_DELETE_REQ_FAIL
+   USER_DELETE_REQ_FAIL,
 
+   USER_UPDATE_ROLE_FAIL,
+   USER_UPDATE_ROLE_SUCCESS,
 
 
 } from "../Constants/User.js"
@@ -98,6 +100,7 @@ const initialState = {
   };
 
 //user list with deletion
+
   export const userListReducer = (state = {users: []}, action) => {
     switch (action.type) {
       case USER_LIST_REQ:
@@ -113,6 +116,17 @@ const initialState = {
         };
       case USER_DELETE_REQ_FAIL:
         return { ...state, error: action.payload };
+
+      case USER_UPDATE_ROLE_FAIL:
+      return { ...state, error: action.payload };
+    case  USER_UPDATE_ROLE_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        users: state.users.map((user) =>
+          user._id === action.payload._id ? action.payload : user
+        ),
+      };
       default:
         return state;
     }
